@@ -34,13 +34,18 @@ jobs:
         with:
           channel: 'stable'
           
-      - name: Install dependencies
+      - name: Install vcpkg and dependencies
         run: |
-          choco install -y nasm yasm llvm
+          git clone https://github.com/microsoft/vcpkg
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          .\vcpkg install opus:x64-windows-static --triplet x64-windows-static
+        shell: pwsh
           
       - name: Build
-        shell: powershell
+        shell: pwsh
         run: |
+          $env:VCPKG_ROOT = "${{ github.workspace }}\vcpkg"
           python build.py --portable --flutter
           
       - name: Upload Windows Artifact
@@ -72,7 +77,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          brew install nasm yasm llvm
+          brew install nasm yasm llvm opus
           
       - name: Build
         run: |
@@ -114,6 +119,7 @@ jobs:
             libasound2-dev libpulse-dev libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev libclang-dev \
             libunwind-dev llvm-dev libclang-dev clang \
+            libpam0g-dev libopus-dev \
             nasm yasm
           
       - name: Build
