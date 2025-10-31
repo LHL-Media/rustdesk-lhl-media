@@ -23,7 +23,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
-
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -39,9 +38,18 @@ jobs:
         run: |
           choco install -y nasm yasm
           
+      - name: Install vcpkg dependencies
+        run: |
+          git clone https://github.com/microsoft/vcpkg
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          .\vcpkg install libvpx:x64-windows-static libyuv:x64-windows-static opus:x64-windows-static aom:x64-windows-static
+        shell: pwsh
+          
       - name: Build
         shell: powershell
         run: |
+          $env:VCPKG_ROOT = "${{ github.workspace }}\vcpkg"
           python build.py --portable --hwcodec --flutter
           
       - name: Upload Windows Artifact
@@ -75,8 +83,16 @@ jobs:
         run: |
           brew install cmake nasm yasm
           
+      - name: Install vcpkg dependencies
+        run: |
+          git clone https://github.com/microsoft/vcpkg
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          ./vcpkg install libvpx libyuv opus aom
+          
       - name: Build
         run: |
+          export VCPKG_ROOT=${{ github.workspace }}/vcpkg
           python3 build.py --portable --hwcodec --flutter
           
       - name: Upload macOS Artifact
@@ -114,10 +130,19 @@ jobs:
             libxfixes-dev libxcb-shape0-dev libxcb-xfixes0-dev \
             libasound2-dev libpulse-dev libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev libclang-dev \
+            libunwind-dev \
             nasm yasm
+            
+      - name: Install vcpkg dependencies
+        run: |
+          git clone https://github.com/microsoft/vcpkg
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          ./vcpkg install libvpx libyuv opus aom
           
       - name: Build
         run: |
+          export VCPKG_ROOT=${{ github.workspace }}/vcpkg
           python3 build.py --portable --hwcodec --flutter
           
       - name: Upload Linux Artifact
