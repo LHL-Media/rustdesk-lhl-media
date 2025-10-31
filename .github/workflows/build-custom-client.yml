@@ -20,7 +20,7 @@ jobs:
     name: Build Windows x64
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -43,7 +43,7 @@ jobs:
           
       - name: Upload Windows Artifact
         if: ${{ inputs.upload-artifact != false }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rustdesk-windows-x64
           path: |
@@ -54,7 +54,7 @@ jobs:
     name: Build macOS Universal
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -76,7 +76,7 @@ jobs:
           
       - name: Upload macOS Artifact
         if: ${{ inputs.upload-artifact != false }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rustdesk-macos
           path: |
@@ -86,7 +86,7 @@ jobs:
     name: Build Linux x64
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -115,7 +115,7 @@ jobs:
           
       - name: Upload Linux Artifact
         if: ${{ inputs.upload-artifact != false }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rustdesk-linux-x64
           path: |
