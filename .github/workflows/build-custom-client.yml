@@ -36,21 +36,12 @@ jobs:
           
       - name: Install dependencies
         run: |
-          choco install -y nasm yasm
-          
-      - name: Install vcpkg dependencies
-        run: |
-          git clone https://github.com/microsoft/vcpkg
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
-          .\vcpkg install libvpx:x64-windows-static libyuv:x64-windows-static opus:x64-windows-static aom:x64-windows-static
-        shell: pwsh
+          choco install -y nasm yasm llvm
           
       - name: Build
         shell: powershell
         run: |
-          $env:VCPKG_ROOT = "${{ github.workspace }}\vcpkg"
-          python build.py --portable --hwcodec --flutter
+          python build.py --portable --flutter
           
       - name: Upload Windows Artifact
         if: ${{ inputs.upload-artifact != false }}
@@ -81,19 +72,11 @@ jobs:
           
       - name: Install dependencies
         run: |
-          brew install cmake nasm yasm
-          
-      - name: Install vcpkg dependencies
-        run: |
-          git clone https://github.com/microsoft/vcpkg
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          ./vcpkg install libvpx libyuv opus aom
+          brew install nasm yasm llvm
           
       - name: Build
         run: |
-          export VCPKG_ROOT=${{ github.workspace }}/vcpkg
-          python3 build.py --portable --hwcodec --flutter
+          python3 build.py --portable --flutter
           
       - name: Upload macOS Artifact
         if: ${{ inputs.upload-artifact != false }}
@@ -130,20 +113,12 @@ jobs:
             libxfixes-dev libxcb-shape0-dev libxcb-xfixes0-dev \
             libasound2-dev libpulse-dev libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev libclang-dev \
-            libunwind-dev \
+            libunwind-dev llvm-dev libclang-dev clang \
             nasm yasm
-            
-      - name: Install vcpkg dependencies
-        run: |
-          git clone https://github.com/microsoft/vcpkg
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          ./vcpkg install libvpx libyuv opus aom
           
       - name: Build
         run: |
-          export VCPKG_ROOT=${{ github.workspace }}/vcpkg
-          python3 build.py --portable --hwcodec --flutter
+          python3 build.py --portable --flutter
           
       - name: Upload Linux Artifact
         if: ${{ inputs.upload-artifact != false }}
